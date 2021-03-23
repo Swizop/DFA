@@ -7,6 +7,9 @@
 using namespace std;
 
 ifstream f("input.txt");
+ofstream g("output.txt");
+
+void isaccepted(string, DFA, int, int, vector<int> = vector<int>());
 
 int main()
 {
@@ -44,6 +47,35 @@ int main()
     for(i = 1; i <= x; i++)         //read strings
     {
         getline(f, word);
+        isaccepted(word, d, d.getin(), 0);
     }
     return 0;
+}
+
+
+void isaccepted(string s, DFA d, int state, int p, vector<int> v)       
+{
+    int i, n = d.getn(), ok = 0;
+    v.push_back(state);
+    if(p >= s.length())                 ///p = index in string
+        if(d.IsFinalState(state))
+        {
+            g << "DA\nTraseu: ";
+            for(i = 0; i < v.size(); i++)
+                g << v[i] << " ";
+            g << "\n";
+        }
+        else
+            g<<"NU\n";
+    else
+    {
+        for(i = 0; i < n && ok == 0; i++)
+            if(d.GetValueFromMat(state, i) == s[p])
+            {
+                isaccepted(s, d, i, p + 1, v);
+                ok = 1;
+            }
+        if(ok == 0)
+            g<<"NU\n";
+    }
 }
